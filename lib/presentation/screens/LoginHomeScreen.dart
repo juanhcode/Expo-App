@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:expo_app/presentation/screens/SpotifyScreen.dart';
 import 'package:expo_app/presentation/shared/buttonSign.dart';
 import 'package:expo_app/presentation/shared/fieldLogin.dart';
@@ -17,6 +18,7 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   final passwordController = TextEditingController();
+  final dio = Dio();
   @override
   void initState() {
     super.initState();
@@ -72,11 +74,23 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
                 height: 30,
               ),
               ButtonSign(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SpotifyScreen()));
+                onTap: () async {
+                  Response response;
+                  dio.options.baseUrl = "http://localhost:8040";
+                  try {
+                    response = await dio.post('/v1/login', data: {
+                      'user': usernameController.text,
+                      'password': passwordController.text
+                    });
+                    print(response.statusCode);
+                    print(response.data.toString());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SpotifyScreen()));
+                  } catch (e) {
+                    print(e);
+                  }
                 },
               ),
               const SizedBox(
@@ -105,23 +119,25 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
               ),
               const SizedBox(
                 height: 15,
-              ), 
+              ),
               SignInButton(
                 Buttons.google,
-                onPressed: _googleSignIn,
+                onPressed: () {
+                  try {
+                    GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+                    _auth.signInWithProvider(_googleAuthProvider).then((value) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SpotifyScreen())));
+                  } catch (e) {
+                    print(e);
+                  }
+                },
               )
             ],
           ),
         ),
       ),
     );
-  }
-  void _googleSignIn() {
-    try {
-      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
-      _auth.signInWithProvider(_googleAuthProvider);
-    } catch (e) {
-      print(e);
-    }
   }
 }
