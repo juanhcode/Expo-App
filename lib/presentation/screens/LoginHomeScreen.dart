@@ -1,12 +1,31 @@
+import 'package:expo_app/presentation/screens/SpotifyScreen.dart';
 import 'package:expo_app/presentation/shared/buttonSign.dart';
 import 'package:expo_app/presentation/shared/fieldLogin.dart';
-import 'package:expo_app/presentation/shared/googleSign.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
-class LoginHomeScreen extends StatelessWidget {
+class LoginHomeScreen extends StatefulWidget {
+  const LoginHomeScreen({super.key});
+
+  @override
+  State<LoginHomeScreen> createState() => _LoginHomeScreenState();
+}
+
+class _LoginHomeScreenState extends State<LoginHomeScreen> {
   final usernameController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
   final passwordController = TextEditingController();
-  LoginHomeScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _auth.authStateChanges().listen((event) {
+      setState(() {
+        _user = event;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +73,10 @@ class LoginHomeScreen extends StatelessWidget {
               ),
               ButtonSign(
                 onTap: () {
-                  print(usernameController.text);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SpotifyScreen()));
                 },
               ),
               const SizedBox(
@@ -83,12 +105,23 @@ class LoginHomeScreen extends StatelessWidget {
               ),
               const SizedBox(
                 height: 15,
-              ),
-              ButtonGoogle(image:"https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"),
+              ), 
+              SignInButton(
+                Buttons.google,
+                onPressed: _googleSignIn,
+              )
             ],
           ),
         ),
       ),
     );
+  }
+  void _googleSignIn() {
+    try {
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      _auth.signInWithProvider(_googleAuthProvider);
+    } catch (e) {
+      print(e);
+    }
   }
 }

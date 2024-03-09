@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+// ignore: file_names
+import 'package:flutter/material.dart' show Border, BorderRadius, BoxDecoration, BuildContext, Colors, Container, EdgeInsets, GestureDetector, Image, StatelessWidget, Widget;
 
 class ButtonGoogle extends StatelessWidget {
   final String image;
@@ -8,7 +9,6 @@ class ButtonGoogle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Inciar con goooglee");
       },
       child: Container(
         padding: const EdgeInsets.all(20),
