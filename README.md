@@ -1,3 +1,3 @@
 # expo_app
 
-project for the subject of app development
+App to consume the Spotify API through a login
