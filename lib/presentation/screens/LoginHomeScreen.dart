@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:expo_app/presentation/screens/SpotifyScreen.dart';
+import 'package:expo_app/presentation/screens/AuthScreen.dart';
 import 'package:expo_app/presentation/shared/buttonSign.dart';
 import 'package:expo_app/presentation/shared/fieldLogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,7 +87,7 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SpotifyScreen()));
+                            builder: (context) => const AuthScreen()));
                   } catch (e) {
                     print(e);
                   }
@@ -128,7 +128,7 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
                     _auth.signInWithProvider(_googleAuthProvider).then((value) => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SpotifyScreen())));
+                            builder: (context) => const AuthScreen())));
                   } catch (e) {
                     print(e);
                   }
