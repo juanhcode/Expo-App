@@ -4,6 +4,7 @@ import 'package:expo_app/presentation/shared/buttonSign.dart';
 import 'package:expo_app/presentation/shared/fieldLogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginHomeScreen extends StatefulWidget {
@@ -83,11 +84,11 @@ class _LoginHomeScreenState extends State<LoginHomeScreen> {
                       'password': passwordController.text
                     });
                     print(response.statusCode);
-                    print(response.data.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AuthScreen()));
+                    final storage = new FlutterSecureStorage();
+                    Map<String,dynamic> res = response.data;
+                    print("JWT Home   "  + response.data['token']);
+                    await storage.write(key: 'jwt', value: response.data['token']);
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => const AuthScreen()));
                   } catch (e) {
                     print(e);
                   }

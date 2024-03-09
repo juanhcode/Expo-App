@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
   List<BiometricType>? _availableBiometrics;
   String _authorized = 'Not Authorized';
   bool _isAuthenticating = false;
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -94,6 +96,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _authenticateWithBiometrics() async {
+    String value = await storage.read(key: 'jwt') ?? 'No data found!';
+    print("JWT segunda pantalla    " + value);
     bool authenticated = false;
     try {
       setState(() {
